@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
-void * process_request(void * arg) {
+void * process_request(void * arg) 
+{
     long socket = (long) arg;
     char buf[1024] = { 0 };
     int bytes_count = recv(socket, buf, sizeof(buf)/sizeof(buf[0]), 0);
