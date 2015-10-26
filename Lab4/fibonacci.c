@@ -58,7 +58,7 @@ static void fibonacci_exit() {
 		printk(KERN_ALERT "fib_number unregister_chrdev() error: %d\n", res);
 	res = unregister_chhrdev(result_major, RESULT_NAME);
 	if (res < 0)
-		printk(KERN_ALERT "fib_result uregister_chrdev() error: %d\n", res);
+		printk(KERN_ALERT "fib_result unregister_chrdev() error: %d\n", res);
 }
 
 static ssize_t number_write(struct file* filp, const char* buffer, size_t length, loff_t* offset) {
