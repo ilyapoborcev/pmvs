@@ -20,8 +20,8 @@ static char *input_error_message;
 
 static int fibonacci_init(void);
 static void fibonacci_exit(void);
-static ssize_t fibonacci_write(struct file*, const char*, size_t, loff_t*);
-static ssize_t fibonacci_read(struct file*, char*, size_t, loff_t*);
+static ssize_t fibonacci_write(struct file *, const char *, size_t, loff_t *);
+static ssize_t fibonacci_read(struct file *, char *, size_t, loff_t *);
 
 static struct file_operations fops = {
 	.owner = THIS_MODULE,
@@ -31,8 +31,8 @@ static struct file_operations fops = {
 
 static int fibonacci_init() 
 {
-	major = register_chrdev(0, DEVICE_NAME, &fops);
-	if (number_major < 0) {
+	major = register_chrdev(249, DEVICE_NAME, &fops);
+	if (major < 0) {
 		printk(KERN_ALERT "fibonacci register_chrdev() error: %d\n", major);
 		return major;
 	}
@@ -42,9 +42,8 @@ static int fibonacci_init()
 
 static void fibonacci_exit() 
 {
-	int res = unregister_chrdev(major, DEVICE_NAME);
-	if (res < 0)
-		printk(KERN_ALERT "fibonacci unregister_chrdev() error: %d\n", res);
+	if (major > 0)
+		unregister_chrdev(major, DEVICE_NAME);
 }
 
 static ssize_t fibonacci_write(struct file *filp, const char *buffer, size_t length, loff_t *offset) 
@@ -53,7 +52,7 @@ static ssize_t fibonacci_write(struct file *filp, const char *buffer, size_t len
 	unsigned long long a;
 	unsigned long long tmp;
 
-	if (length > BUF_SIZE) {
+	if (length > BUF_LEN) {
 		input_error_code = -EINVAL;
 		input_error_message = "Too long input string";
 		return input_error_code;
@@ -96,7 +95,7 @@ static ssize_t fibonacci_write(struct file *filp, const char *buffer, size_t len
 	return length;	
 }
 
-static ssize_t fibonacci_read(struct file *filp, const char *buffer, size_t length, loff_t *offset)
+static ssize_t fibonacci_read(struct file *filp, char *buffer, size_t length, loff_t *offset)
 {
 	ssize_t size;
 	long error_length;
@@ -112,7 +111,7 @@ static ssize_t fibonacci_read(struct file *filp, const char *buffer, size_t leng
 		return error_length;
 	}
 
-	snprintf(buf, BUF_SIZE, "%llu", result);
+	snprintf(buf, BUF_LEN, "%llu", result);
 	size = strlen(buf);
 	if (size >= length) {
 		return -EINVAL;
