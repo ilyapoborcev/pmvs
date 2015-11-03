@@ -43,7 +43,7 @@ static int fibonacci_init()
 static void fibonacci_exit() 
 {
 	if (major > 0)
-		unregister_chrdev(major, DEVICE_NAME);
+		unregister_chrdev(249, DEVICE_NAME);
 }
 
 static ssize_t fibonacci_write(struct file *filp, const char *buffer, size_t length, loff_t *offset) 
